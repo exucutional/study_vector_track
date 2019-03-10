@@ -7,12 +7,19 @@
 #define MVECTOR_HPP_
 
 #define DEFLOG
+#define DEFBUG
 
 #ifdef DEFLOG
 #define LOG(code) code
 FILE* log = fopen("logs/vecmemlogs.txt", "w");
 #else
 #define LOG(code)
+#endif
+
+#ifdef DEFBUG
+#define DEBUG(code) code
+#else
+#define DEBUG(code)
 #endif
 
 #include <cstring>
@@ -82,19 +89,19 @@ Vector<T>::Vector():
 	data(nullptr),
 	capacity(0),
 	size(0)
-	{std::cout << "Vector ctor\n";}
+	{DEBUG(std::cout << "Vector ctor\n";)}
 template<class T>
 Vector<T>::Vector(int cap):
 	data(new int[cap]),
 	capacity(cap),
 	size(0)
-	{std::cout << "Vector(capacity) ctor\n";}
+	{DEBUG(std::cout << "Vector(capacity) ctor\n";)}
 template<class T>
 Vector<T>::Vector(T* dt, int cap, int sz):
 	data(dt),
 	capacity(cap),
 	size(sz)
-	{std::cout << "Vector(data, capacity, size) ctor\n";}
+	{DEBUG(std::cout << "Vector(data, capacity, size) ctor\n";)}
 template<class T>
 void Vector<T>::swap(Vector<T>& rhs)
 {
@@ -156,6 +163,7 @@ T Vector<T>::pop_back()
 	assert(size > 0);
 	return data[--size];
 }
+LOG(
 template<class T>
 void* Vector<T>::operator new(size_t size, const char* file, int line)
 {
@@ -174,15 +182,16 @@ void Vector<T>::operator delete(void* mem, const char* file, int line)
 	del->~Vector();
 	free(del);
 }
-
+)
 template<class T>
 Vector<T>::~Vector()
 {
 	delete[] data;
 	data = nullptr;
 	size = 0;
-	std::cout << "Vector dtor\n";
+	DEBUG(std::cout << "Vector dtor\n";)
 }
 
 #undef DEFLOG
+#undef DEFBUG
 #endif /* MVECTOR_HPP_ */
