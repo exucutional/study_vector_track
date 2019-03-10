@@ -50,20 +50,20 @@ public:
 		return Vector<T>(tmpptr, lhs.size, rhs.capacity);
 	}
 	friend const Vector<T> operator-(const Vector<T>& lhs, const Vector<T>& rhs)
-		{
-			assert(lhs.size == rhs.size);
-			T* tmpptr = new T[lhs.size];
-			for (int i = 0; i < lhs.size; i++)
-				tmpptr[i] = lhs.data[i] - rhs.data[i];
-			return Vector<T>(tmpptr, lhs.size, rhs.capacity);
-		}
+	{
+		assert(lhs.size == rhs.size);
+		T* tmpptr = new T[lhs.size];
+		for (int i = 0; i < lhs.size; i++)
+			tmpptr[i] = lhs.data[i] - rhs.data[i];
+		return Vector<T>(tmpptr, lhs.size, rhs.capacity);
+	}
 	friend std::ostream& operator <<(std::ostream &out, const Vector<T>& rhs)
 	{
-			assert(rhs.data);
-			out << "Vector of size " << rhs.size << std::endl;
-			for (int i = 0; i < rhs.size; i++)
-				out << "[" << i << "]: " << rhs.data[i] << std::endl;
-			return out;
+		assert(rhs.data);
+		out << "Vector of size " << rhs.size << std::endl;
+		for (int i = 0; i < rhs.size; i++)
+			out << "[" << i << "]: " << rhs.data[i] << std::endl;
+		return out;
 	}
 	friend std::istream& operator >>(std::istream &in, Vector<T>& rhs)
 	{
