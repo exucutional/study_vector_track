@@ -1,0 +1,2 @@
+new vector[0x55cd50a070a0] FILE:../unit_test.cpp LINE:10
+delete	vector[0x55cd50a070a0] FILE:../unit_test.cpp LINE:19
