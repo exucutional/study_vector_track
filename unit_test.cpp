@@ -17,5 +17,16 @@ int main()
 	std::cout << *arr1;
 	//delete(__FILE__, __LINE__) arr1;
 	arr1->operator delete(arr1, __FILE__, __LINE__);
+	//throw Mexcept(12, "test", __FILE__, __LINE__);
+	try {
+		const Mexcept testparent(0, "test2", __FILE__, __LINE__);
+		throw Mexcept(12, "test", __FILE__, __LINE__);
+	}
+	catch (const Mexcept& mxcpt) {
+		std::cerr << "\nMy exception was caught, with message: "<< mxcpt;
+	}
+	catch (...) {
+		std::cerr << "unknown error\n";
+	}
 	return EXIT_SUCCESS;
 }

@@ -24,6 +24,7 @@ FILE* log = fopen("logs/vecmemlogs.txt", "w");
 
 #include <cstring>
 #include <cassert>
+#include "mexcpt.hpp"
 
 template<class T>
 class Vector
@@ -50,7 +51,15 @@ public:
 	~Vector();
 	friend const Vector<T> operator+(const Vector<T>& lhs, const Vector<T>& rhs)
 	{
-		assert(lhs.size == rhs.size);
+		if (lhs.size != rhs.size) {
+			try {
+				throw Mexcept(1, "vector + vector sizes error", __FILE__, __LINE__);
+			}
+			catch (Mexcept) {
+				throw;
+			}
+		}
+		//assert(lhs.size == rhs.size);
 		T* tmpptr = new T[lhs.size];
 		for (int i = 0; i < lhs.size; i++)
 			tmpptr[i] = lhs.data[i] + rhs.data[i];
@@ -58,7 +67,15 @@ public:
 	}
 	friend const Vector<T> operator-(const Vector<T>& lhs, const Vector<T>& rhs)
 	{
-		assert(lhs.size == rhs.size);
+		if (lhs.size != rhs.size) {
+			try {
+				throw Mexcept(1, "vector - vector sizes error", __FILE__, __LINE__);
+			}
+			catch (Mexcept) {
+				throw;
+			}
+		}
+		//assert(lhs.size == rhs.size);
 		T* tmpptr = new T[lhs.size];
 		for (int i = 0; i < lhs.size; i++)
 			tmpptr[i] = lhs.data[i] - rhs.data[i];
@@ -101,7 +118,7 @@ Vector<T>::Vector(T* dt, int cap, int sz):
 	data(dt),
 	capacity(cap),
 	size(sz)
-	{DEBUG(std::cout << "Vector(data, capacity, size) ctor\n";)}
+	{DEBUG(std::cout << "Vector ctor(data, capacity, size)\n";)}
 template<class T>
 void Vector<T>::swap(Vector<T>& rhs)
 {
