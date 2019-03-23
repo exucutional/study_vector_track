@@ -36,10 +36,12 @@ public:
 	Vector();
 	Vector(int cap);
 	Vector(T* dt, int cap, int sz);
+	Vector(const Vector<T>& rhs);
 	T& operator[](int index);
 	Vector<T>& operator+=(const Vector<T>& rhs);
 	Vector<T>& operator-=(const Vector<T>& rhs);
 	Vector<T>& operator=(const Vector<T>& rhs);
+	Vector<T>& operator=(Vector<T>&& rhs);
 	Vector<T> copy(const Vector<T>& rhs);
 	LOG(
 	void* operator new(size_t size, const char* file, int line);
@@ -49,11 +51,11 @@ public:
 	void swap(Vector<T>& rhs);
 	T pop_back();
 	~Vector();
-	friend const Vector<T> operator+(const Vector<T>& lhs, const Vector<T>& rhs)
+	friend Vector<T> operator+ (Vector<T> lhs, const Vector<T>& rhs)
 	{
 		if (lhs.size != rhs.size) {
 			try {
-				throw Mexcept(1, "vector + vector sizes error", __FILE__, __LINE__);
+				throw Mexcept(1, "vector - vector sizes error", __FILE__, __LINE__);
 			}
 			catch (Mexcept) {
 				throw;
@@ -83,7 +85,14 @@ public:
 	}
 	friend std::ostream& operator <<(std::ostream &out, const Vector<T>& rhs)
 	{
-		assert(rhs.data);
+		if (!rhs.data) {
+			try {
+				throw Mexcept(1, "vector outout data nullptr", __FILE__, __LINE__);
+			}
+			catch (Mexcept) {
+				throw;
+			}
+		}
 		out << "Vector of size " << rhs.size << std::endl;
 		for (int i = 0; i < rhs.size; i++)
 			out << "[" << i << "]: " << rhs.data[i] << std::endl;
@@ -91,7 +100,14 @@ public:
 	}
 	friend std::istream& operator >>(std::istream &in, Vector<T>& rhs)
 	{
-		assert(rhs.data);
+		if (!rhs.data) {
+			try {
+				throw Mexcept(1, "vector input data nullptr", __FILE__, __LINE__);
+			}
+			catch (Mexcept) {
+				throw;
+			}
+		}
 		std::cout << "Enter vector of size " << rhs.capacity << std::endl;
 		for (int i = 0; i < rhs.capacity; i++) {
 			in >> rhs.data[i];
@@ -112,13 +128,22 @@ Vector<T>::Vector(int cap):
 	data(new int[cap]),
 	capacity(cap),
 	size(0)
-	{DEBUG(std::cout << "Vector(capacity) ctor\n";)}
+	{DEBUG(std::cout << "Vector(capacity(" << cap << ")) ctor\n";)}
 template<class T>
 Vector<T>::Vector(T* dt, int cap, int sz):
 	data(dt),
 	capacity(cap),
 	size(sz)
-	{DEBUG(std::cout << "Vector ctor(data, capacity, size)\n";)}
+	{DEBUG(std::cout << "Vector (data, capacity(" << cap << "), size(" << sz << ")) ctor\n");}
+template<class T>
+Vector<T>::Vector(const Vector<T>& rhs)
+{
+	data = new T[rhs.capacity];
+	memcpy(data, rhs.data, sizeof(T) * rhs.capacity);
+	size = rhs.size;
+	capacity = rhs.capacity;
+	{DEBUG(std::cout << "Vector copy(capacity(" << capacity << "), size(" << size << ")) ctor\n");}
+}
 template<class T>
 void Vector<T>::swap(Vector<T>& rhs)
 {
@@ -143,19 +168,41 @@ template<class T>
 T& Vector<T>::operator[](int index)
 {
 	assert(0 <= index && index <= size);
+	if (!(0 <= index && index <= size)) {
+		try {
+			throw Mexcept(1, "vector[] wrong index", __FILE__, __LINE__);
+		}
+		catch (Mexcept) {
+			throw;
+		}
+	}
 	return data[index];
 }
 template<class T>
 Vector<T>& Vector<T>::operator+=(const Vector<T>& rhs)
 {
-	assert(size == rhs.size);
+	if (size != rhs.size) {
+		try {
+			throw Mexcept(1, "vector+= wrong size", __FILE__, __LINE__);
+		}
+		catch (Mexcept) {
+			throw;
+		}
+	}
 	*this = *this + rhs;
 	return *this;
 }
 template<class T>
 Vector<T>& Vector<T>::operator-=(const Vector<T>& rhs)
 {
-	assert(size == rhs.size);
+	if (size != rhs.size) {
+		try {
+			throw Mexcept(1, "vector-= wrong size", __FILE__, __LINE__);
+		}
+		catch (Mexcept) {
+			throw;
+		}
+	}
 	*this = *this - rhs;
 	return *this;
 }
@@ -170,14 +217,41 @@ Vector<T>& Vector<T>::operator=(const Vector<T>& rhs)
 	return *this;
 }
 template<class T>
+Vector<T>& Vector<T>::operator=(Vector<T>&& rhs)
+{
+	swap(rhs);
+	return *this;
+}
+template<class T>
 void Vector<T>::push_back(T value)
 {
-	data[size++] = value;
+	if (size < capacity) {
+		data[size++] = value;
+	}
+	else {
+		T* tmpptr = new T[capacity * 2];
+		assert(tmpptr);
+		for (int i = 0; i < capacity; i++) {
+			tmpptr[i] = data[i];
+		}
+		delete[] data;
+		data = tmpptr;
+		capacity *= 2;
+		data[size++] = value;
+	}
 }
 template<class T>
 T Vector<T>::pop_back()
 {
 	assert(size > 0);
+	if (size <= 0) {
+		try {
+			throw Mexcept(1, "vector pop_back wrong size", __FILE__, __LINE__);
+		}
+		catch (Mexcept) {
+			throw;
+		}
+	}
 	return data[--size];
 }
 LOG(

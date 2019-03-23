@@ -19,7 +19,7 @@ int main()
 	arr1->operator delete(arr1, __FILE__, __LINE__);
 	//throw Mexcept(12, "test", __FILE__, __LINE__);
 	try {
-		const Mexcept testparent(0, "test2", __FILE__, __LINE__);
+		//Mexcept* testparent = new Mexcept(0, "test2", __FILE__, __LINE__);
 		throw Mexcept(12, "test", __FILE__, __LINE__);
 	}
 	catch (const Mexcept& mxcpt) {
