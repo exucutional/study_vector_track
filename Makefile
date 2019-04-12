@@ -7,7 +7,7 @@ LDFLAGS= -g -no-pie
 VPATH = ./src
 CMPPATH = ./compile
 SRCC = unit_test.cpp
-HEAD = mvector.hpp mexcpt.hpp mvectorimplem.cpp mvectorboolimplem.cpp
+HEAD = mvector.hpp mvectorbool.hpp mexcpt.hpp mvectorimplem.cpp mvectorboolimplem.cpp
 SRCSASM = 
 OBJC = $(SRCC:.cpp=.o)
 OBJASM = $(SRCASM:.S=.o)
