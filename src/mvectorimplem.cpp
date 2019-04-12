@@ -48,13 +48,12 @@ Vector<T> Vector<T>::copy(const Vector<T>& rhs)
 template<typename T>
 T& Vector<T>::operator[](int index)
 {
-	assert(0 <= index && index <= size);
 	if (!(0 <= index && index <= size)) {
 		try {
 			throw Mexcept(1, "vector[] wrong index", __FILE__, __LINE__);
-		}
-		catch (Mexcept) {
-			throw;
+		}	
+		catch (const Mexcept& mxcpt) {
+			std::cerr << "\nMy exception was caught, with message: "<< mxcpt;
 		}
 	}
 	return data[index];
@@ -66,8 +65,8 @@ Vector<T>& Vector<T>::operator+=(const Vector<T>& rhs)
 		try {
 			throw Mexcept(1, "vector+= wrong size", __FILE__, __LINE__);
 		}
-		catch (Mexcept) {
-			throw;
+		catch (const Mexcept& mxcpt) {
+			std::cerr << "\nMy exception was caught, with message: "<< mxcpt;
 		}
 	}
 	*this = *this + rhs;
@@ -80,8 +79,8 @@ Vector<T>& Vector<T>::operator-=(const Vector<T>& rhs)
 		try {
 			throw Mexcept(1, "vector-= wrong size", __FILE__, __LINE__);
 		}
-		catch (Mexcept) {
-			throw;
+		catch (const Mexcept& mxcpt) {
+			std::cerr << "\nMy exception was caught, with message: "<< mxcpt;
 		}
 	}
 	*this = *this - rhs;
@@ -94,7 +93,7 @@ Vector<T>& Vector<T>::operator=(const Vector<T>& rhs)
 	capacity = rhs.capacity;
 	delete[] data;
 	data = new T[rhs.capacity];
-	memcpy(data, rhs.data, sizeof(T) * size);
+	memcpy(data, rhs.data	, sizeof(T) * size);
 	return *this;
 }
 template<typename T>
@@ -124,13 +123,12 @@ void Vector<T>::push_back(T value)
 template<typename T>
 T Vector<T>::pop_back()
 {
-	assert(size > 0);
 	if (size <= 0) {
 		try {
 			throw Mexcept(1, "vector pop_back wrong size", __FILE__, __LINE__);
 		}
-		catch (Mexcept) {
-			throw;
+		catch (const Mexcept& mxcpt) {
+			std::cerr << "\nMy exception was caught, with message: "<< mxcpt;
 		}
 	}
 	return data[--size];

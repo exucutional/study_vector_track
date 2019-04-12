@@ -57,8 +57,8 @@ public:
 			try {
 				throw Mexcept(1, "vector - vector sizes error", __FILE__, __LINE__);
 			}
-			catch (Mexcept) {
-				throw;
+			catch (const Mexcept& mxcpt) {
+				std::cerr << "\nMy exception was caught, with message: "<< mxcpt;
 			}
 		}
 		//assert(lhs.size == rhs.size);
@@ -73,8 +73,8 @@ public:
 			try {
 				throw Mexcept(1, "vector - vector sizes error", __FILE__, __LINE__);
 			}
-			catch (Mexcept) {
-				throw;
+			catch (const Mexcept& mxcpt) {
+				std::cerr << "\nMy exception was caught, with message: "<< mxcpt;
 			}
 		}
 		//assert(lhs.size == rhs.size);
@@ -89,8 +89,8 @@ public:
 			try {
 				throw Mexcept(1, "vector outout data nullptr", __FILE__, __LINE__);
 			}
-			catch (Mexcept) {
-				throw;
+			catch (const Mexcept& mxcpt) {
+				std::cerr << "\nMy exception was caught, with message: "<< mxcpt;
 			}
 		}
 		out << "Vector of size " << rhs.size << std::endl;
@@ -104,8 +104,8 @@ public:
 			try {
 				throw Mexcept(1, "vector input data nullptr", __FILE__, __LINE__);
 			}
-			catch (Mexcept) {
-				throw;
+			catch (const Mexcept& mxcpt) {
+				std::cerr << "\nMy exception was caught, with message: "<< mxcpt;
 			}
 		}
 		std::cout << "Enter vector of size " << rhs.capacity << std::endl;
@@ -117,8 +117,9 @@ public:
 	}
 };
 
+#include "mvectorbool.hpp"
+
 #include "mvectorimplem.cpp"
-#include "mvectorboolimplem.cpp"
 
 #undef DEFLOG
 #undef DEFBUG
